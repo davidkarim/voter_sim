@@ -4,6 +4,11 @@ require "./person.rb"
 require "./voter.rb"
 require "./politician.rb"
 
+# Puts all names in WOrld in an array
+def list_of_names
+  World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
+end
+
 response = ""
 politics_list = {L: "Liberal", C: "Conservative", T: "Tea Party", S: "Socialist", N: "Neutral"}
 party_list = {R: "Republican", D: "Democrat"}
@@ -20,11 +25,22 @@ until ["E", "e"].include? response
     when "P" # Politician
       name = Questions.give_name
       party = party_list[Questions.give_party.to_sym]
-      Politician.new(name, party)
+      voters_and_politicians = list_of_names
+      # If politician hasn't yet been created, then add
+      if !(voters_and_politicians.map { |p| p.downcase }.include? name.downcase)
+        Politician.new(name, party)
+      else
+        puts "This person has already been created. Names must be unique."
+      end
     when "V" # Voter
       name = Questions.give_name
       politics = politics_list[Questions.give_politics.to_sym]
-      Voter.new(name, politics)
+      # If voter hasn't yet been created, then add
+      if !(voters_and_politicians.map { |p| p.downcase }.include? name.downcase)
+        Voter.new(name, politics)
+      else
+        puts "This person has already been created. Names must be unique."
+      end
     end
   when "L"
     puts "********* List *********"
@@ -32,7 +48,7 @@ until ["E", "e"].include? response
     World.show_voters
     puts "*" * 24
   when "U"
-    voters_and_politicians = World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
+    voters_and_politicians = list_of_names
     response = Questions.who_to_update(voters_and_politicians)
 
     World.politicians.map do |politician|
@@ -70,7 +86,7 @@ until ["E", "e"].include? response
     World.show_politicians
     World.show_voters
     puts ""
-    voters_and_politicians = World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
+    voters_and_politicians = list_of_names
     response = Questions.delete_person(voters_and_politicians)
     # if World.politicians.index { |politician| politician.name.downcase == response.downcase }.nil? && World.voters.index { |voter| voter.name.downcase == response.downcase }.nil?
     if !(voters_and_politicians.map { |p| p.downcase }.include? response.downcase)
