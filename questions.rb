@@ -57,7 +57,7 @@ module Questions
   def self.who_to_update(current_list = nil)
     response = ""
     until response != ""
-      puts "Who would you like to update?"
+      puts "Who would you like to update (text will autocomplete)?"
       response = EnhanceIO.input_auto(current_list)
     end
     return response
@@ -101,7 +101,7 @@ module Questions
   def self.delete_person(current_list = nil)
     response = ""
     until response.length >1
-      puts "Who would you like to delete from the list (hit Enter/Return for no one)?"
+      puts "Who would you like to delete from the list (hit Enter/Return for no one, text will autocomplete)?"
       response = EnhanceIO.input_auto(current_list)
       return "" if response == ""
       puts "Name must be at least 2 characters." if response.length < 2

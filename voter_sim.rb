@@ -4,7 +4,7 @@ require "./person.rb"
 require "./voter.rb"
 require "./politician.rb"
 
-# Puts all names in WOrld in an array
+# Puts all names in World in an array
 def list_of_names
   World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
 end
@@ -43,10 +43,14 @@ until ["E", "e"].include? response
       end
     end
   when "L"
-    puts "********* List *********"
-    World.show_politicians
-    World.show_voters
-    puts "*" * 24
+    if list_of_names.empty?
+      puts "There are no voters or politicians yet."
+    else
+      puts "********* List *********"
+      World.show_politicians
+      World.show_voters
+      puts "*" * 24
+    end
   when "U"
     voters_and_politicians = list_of_names
     response = Questions.who_to_update(voters_and_politicians)
