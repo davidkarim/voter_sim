@@ -1,3 +1,5 @@
+require "./enhance_io.rb"
+
 module Questions
   def self.what_to_do
     options = ["C", "L", "U", "D", "E"]
@@ -52,11 +54,11 @@ module Questions
     return response.upcase
   end
 
-  def self.who_to_update
+  def self.who_to_update(current_list = nil)
     response = ""
     until response != ""
       puts "Who would you like to update?"
-      response = gets.chomp
+      response = EnhanceIO.input_auto(current_list)
     end
     return response
   end
@@ -96,11 +98,11 @@ module Questions
     return response.upcase
   end
 
-  def self.delete_person
+  def self.delete_person(current_list = nil)
     response = ""
     until response.length >1
       puts "Who would you like to delete from the list (hit Enter/Return for no one)?"
-      response = gets.chomp
+      response = EnhanceIO.input_auto(current_list)
       return "" if response == ""
       puts "Name must be at least 2 characters." if response.length < 2
     end

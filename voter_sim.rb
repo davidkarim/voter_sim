@@ -32,34 +32,35 @@ until ["E", "e"].include? response
     World.show_voters
     puts "*" * 24
   when "U"
-    response = Questions.who_to_update
+    voters_and_politicians = World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
+    response = Questions.who_to_update(voters_and_politicians)
 
     World.politicians.map do |politician|
-      if politician.name == response
+      if politician.name.downcase == response.downcase
         name = Questions.update_name
         if name != ""
           politician.name = name
-          puts "Politican being modded #{politician.name}"
+          puts "Politican name changed to #{politician.name}"
         end
         party = Questions.update_party
         if party != ""
           politician.party = party_list[party.to_sym]
-          puts "Politician party modded #{politician.party}"
+          puts "Politician party changed to #{politician.party}"
         end
       end
     end
 
     World.voters.map do |voter|
-      if voter.name == response
+      if voter.name.downcase == response.downcase
         name = Questions.update_name
         if name != ""
           voter.name = name
-          puts "Voter being modded #{voter.name}"
+          puts "Voter name changed to #{voter.name}"
         end
         politics = Questions.update_politics
         if politics != ""
           voter.politics = politics_list[politics.to_sym]
-          puts "Voter politics are now #{voter.politics}"
+          puts "Voter politics changed to #{voter.politics}"
         end
       end
     end
@@ -69,14 +70,16 @@ until ["E", "e"].include? response
     World.show_politicians
     World.show_voters
     puts ""
-    response = Questions.delete_person
-    if World.politicians.index { |politician| politician.name == response }.nil? && World.voters.index { |voter| voter.name == response }.nil?
+    voters_and_politicians = World.politicians.map { |p| p.name } + World.voters.map { |p| p.name}
+    response = Questions.delete_person(voters_and_politicians)
+    # if World.politicians.index { |politician| politician.name.downcase == response.downcase }.nil? && World.voters.index { |voter| voter.name.downcase == response.downcase }.nil?
+    if !(voters_and_politicians.map { |p| p.downcase }.include? response.downcase)
       puts "- Person not found"
     else
       # Delete_if gives no indication whether delete is succesful or not,
       # so need to do previous (index) command first.
-      World.politicians.delete_if { |politician| politician.name == response }
-      World.voters.delete_if { |voter| voter.name == response }
+      World.politicians.delete_if { |politician| politician.name.downcase == response.downcase }
+      World.voters.delete_if { |voter| voter.name.downcase == response.downcase }
       puts "- #{response} has been deleted."
     end
   end
